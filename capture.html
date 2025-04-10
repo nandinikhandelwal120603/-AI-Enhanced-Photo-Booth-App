@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Time!</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: url("{{ url_for('static', filename='image_2.png') }}") no-repeat center center/cover;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            margin: 0;
+            position: relative;
+        }
+
+        h1 {
+            color: #7F2E45;
+        }
+
+        #video-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        #video-container img {
+            width: 400px;
+            height: auto;
+            border-radius: 10px;
+            transform: scaleX(-1); /* mirror effect */
+        }
+
+        #countdown {
+            font-size: 80px;
+            font-weight: bold;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            display: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 18px;
+            background-color: #9D7967;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #7F2E45;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hi {{ name }} 👋 Get ready to pose!</h1>
+
+    <div id="video-container">
+        <img src="{{ url_for('video_feed') }}">
+        <div id="countdown">5</div>
+    </div>
+
+    <button onclick="startCapturing()">Start Capturing</button>
+
+    <!-- Shutter sound -->
+    <audio id="shutterSound" src="{{ url_for('static', filename='shutter.mp3') }}"></audio>
+
+    <script>
+        let total = {{ total }};
+        let captured = 0;
+
+        async function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function startCapturing() {
+            for (let i = 0; i < total; i++) {
+                await showCountdown(5);
+                triggerFlash();
+                playShutter();
+                await takePicture();
+            }
+            window.location.href = '/finalize';
+        }
+
+        function playShutter() {
+            const shutter = document.getElementById('shutterSound');
+            shutter.currentTime = 0;
+            shutter.play();
+        }
+
+        async function showCountdown(seconds) {
+            const countdown = document.getElementById('countdown');
+            countdown.innerText = seconds;
+            countdown.style.display = 'block';
+
+            for (let i = seconds; i > 0; i--) {
+                countdown.innerText = i;
+                await delay(1000);
+            }
+
+            countdown.style.display = 'none';
+        }
+
+        function triggerFlash() {
+            const flash = document.createElement('div');
+            flash.style.position = 'fixed';
+            flash.style.top = 0;
+            flash.style.left = 0;
+            flash.style.width = '100%';
+            flash.style.height = '100%';
+            flash.style.backgroundColor = 'white';
+            flash.style.zIndex = 9999;
+            flash.style.opacity = 1;
+            flash.style.transition = 'opacity 0.4s';
+            document.body.appendChild(flash);
+
+            setTimeout(() => {
+                flash.style.opacity = 0;
+                setTimeout(() => flash.remove(), 400);
+            }, 100);
+        }
+
+        async function takePicture() {
+            await fetch('/take_picture', { method: 'POST' });
+        }
+    </script>
+</body>
+</html>

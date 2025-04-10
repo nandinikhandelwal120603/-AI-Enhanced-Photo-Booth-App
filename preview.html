@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Photo Booth Printer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: url("{{ url_for('static', filename='image_1.png') }}") no-repeat center center/cover;
+      color: #44290C;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #printer {
+      width: 200px;
+      height: 500px;
+      background: #333;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .final-photo {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+      position: relative;
+      top: -100px;
+      transition: top 5s ease-in-out;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #9D7967;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #7F2E45;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div id="printer"></div>
+
+    <div class="btn-group">
+      <a href="{{ url_for('download') }}" download>
+        <button>⬇️ Download Strip</button>
+      </a>
+      <a href="{{ url_for('index') }}">
+        <button>🔁 Restart</button>
+      </a>
+    </div>
+  </div>
+
+  <!-- Printer sound -->
+  <audio id="printerSound" src="{{ url_for('static', filename='printer.mp3') }}"></audio>
+
+  <script>
+    window.onload = function () {
+      const printer = document.getElementById('printer');
+      const img = document.createElement('img');
+      img.src = "{{ url_for('static', filename='final_output.jpg') }}";
+      img.className = 'final-photo';
+      printer.appendChild(img);
+
+      const printerSound = document.getElementById('printerSound');
+      printerSound.play();
+
+      setTimeout(() => {
+        img.style.top = '0px';
+      }, 300);
+    };
+  </script>
+
+</body>
+</html>

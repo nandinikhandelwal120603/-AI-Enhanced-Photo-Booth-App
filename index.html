@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Booth</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background:url("{{ url_for('static', filename='image_1.png') }}") no-repeat center center/cover;
+            background-color: #F4EEE9;
+
+            color: #44290C; /* Brown Derby */
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #7F2E45; /* Velvet Maroon */
+            text-align: center;
+        }
+        form {
+            background-color: #C4BAB3; /* Cotton Seed */
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px 0;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #9D7967; /* Mocha Mousse */
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #9D7967; /* Mocha Mousse */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7F2E45; /* Velvet Maroon */
+        }
+    </style>
+</head>
+<body>
+    <h1>📸 Welcome to the Photo Booth!</h1>
+    
+    <form method="POST">
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="num_images">Number of images:</label>
+        <input type="number" id="num_images" name="num_images" min="1" max="10" value="2" required>
+
+        <label for="filter">Choose a filter:</label>
+        <select id="filter" name="filter">
+            <option value="none">None</option>
+            <option value="bw">Black & White</option>
+            <option value="sepia">Sepia</option>
+            <option value="vintage">vintage</option>
+            <option value="old money">old money</option>
+        </select>
+
+        <label for="layout">Choose a layout:</label>
+        <select id="layout" name="layout">
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+        </select>
+
+        <button type="submit">Start Booth</button>
+    </form>
+</body>
+</html>
